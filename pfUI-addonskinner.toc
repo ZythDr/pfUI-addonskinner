@@ -44,6 +44,7 @@ skins\Outfitter.lua
 skins\pfQuest.lua
 skins\PizzaSlices.lua
 skins\Possessions.lua
+skins\Postal.lua
 skins\QuickHeal.lua
 skins\RABuffs.lua
 skins\raidTemplate.lua
