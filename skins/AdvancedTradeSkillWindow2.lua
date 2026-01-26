@@ -86,7 +86,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
       
       ATSWFramePortrait:SetParent(backdrop)
       ATSWFramePortrait:SetAllPoints(backdrop)
-      ATSWFramePortrait:SetTexCoord(.08, .92, .08, .92)
+      ATSWFramePortrait:SetTexCoord(.07, .93, .07, .93)
       ATSWFramePortrait:SetDrawLayer("ARTWORK")
     end
     
@@ -112,7 +112,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
         SkinButton(tab, nil, nil, nil, texture)
         
         if texture then
-          texture:SetTexCoord(.08, .92, .08, .92)
+          texture:SetTexCoord(.07, .93, .07, .93)
         end
         
         -- Apply customizable selection highlight color and alpha
@@ -158,7 +158,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
             tab:SetNormalTexture(disguiseTex)
             local newTex = tab:GetNormalTexture()
             if newTex and newTex.SetTexCoord then
-              newTex:SetTexCoord(.08, .92, .08, .92)
+              newTex:SetTexCoord(.07, .93, .07, .93)
               newTex:Show()
             end
 
@@ -446,7 +446,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
       SetHighlight(ATSWRecipeIcon)
       
       if texture then
-        texture:SetTexCoord(.08, .92, .08, .92)
+        texture:SetTexCoord(.07, .93, .07, .93)
         texture:SetDrawLayer("ARTWORK")
       end
     end
@@ -478,7 +478,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
         end
         
         if btnIcon then
-          btnIcon:SetTexCoord(.08, .92, .08, .92)
+          btnIcon:SetTexCoord(.07, .93, .07, .93)
           btnIcon:SetDrawLayer("ARTWORK")
         end
         
@@ -607,8 +607,8 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
       -- Reduce button size by 4px (2px each side)
       local bw, bh = ATSWPreviousItemButton:GetWidth(), ATSWPreviousItemButton:GetHeight()
       if bw and bh then
-        ATSWPreviousItemButton:SetWidth(math.max(8, bw - 4))
-        ATSWPreviousItemButton:SetHeight(math.max(8, bh - 4))
+        ATSWPreviousItemButton:SetWidth(math.max(8, bw - 8))
+        ATSWPreviousItemButton:SetHeight(math.max(8, bh - 8))
       end
 
       -- Use custom return icon (64x64) and inset it by 7px on every side
@@ -618,14 +618,14 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
         normalTex:ClearAllPoints()
         normalTex:SetPoint("TOPLEFT", ATSWPreviousItemButton, "TOPLEFT", 7, -7)
         normalTex:SetPoint("BOTTOMRIGHT", ATSWPreviousItemButton, "BOTTOMRIGHT", -7, 7)
-        normalTex:SetTexCoord(.08, .92, .08, .92)
+        normalTex:SetTexCoord(.07, .93, .07, .93)
       end
       if pushedTex then
         pushedTex:SetTexture(iconPath)
         pushedTex:ClearAllPoints()
         pushedTex:SetPoint("TOPLEFT", ATSWPreviousItemButton, "TOPLEFT", 7, -7)
         pushedTex:SetPoint("BOTTOMRIGHT", ATSWPreviousItemButton, "BOTTOMRIGHT", -7, 7)
-        pushedTex:SetTexCoord(.08, .92, .08, .92)
+        pushedTex:SetTexCoord(.07, .93, .07, .93)
         pushedTex:SetVertexColor(0.9, 0.9, 0.9)
       end
     end
@@ -791,7 +791,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
 
     ATSWCSFramePortrait:SetParent(backdrop)
     ATSWCSFramePortrait:SetAllPoints(backdrop)
-    ATSWCSFramePortrait:SetTexCoord(.08, .92, .08, .92)
+    ATSWCSFramePortrait:SetTexCoord(.07, .93, .07, .93)
     ATSWCSFramePortrait:SetDrawLayer("ARTWORK")
   end
 

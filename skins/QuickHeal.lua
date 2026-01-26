@@ -58,6 +58,7 @@ pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
         QuickHealConfig_NotificationChannelNameEditBox, -- -- skinEditBox ???
         MTListFrame,
         QH_Display_Tooltip,
+        
       }
       
       local function Hover(btn, dir)
@@ -122,9 +123,6 @@ pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
         QuickHealConfig_CheckButtonOverhealMessagePlaySound,
         QuickHealConfig_CheckButtonTargetPriority,
         QuickHealConfig_CheckButtonQuickClick,
-        QuickHealConfig_CheckButtonStopcast,
-        QuickHealConfig_CheckButtonPrecastAggro,
-        QuickHealConfig_CheckButtonPreHOTAggro,
         QuickHealConfig_FilterRaidGroup1CheckBox,
         QuickHealConfig_FilterRaidGroup2CheckBox,
         QuickHealConfig_FilterRaidGroup3CheckBox,
@@ -143,12 +141,8 @@ pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
         QuickHealConfig_RatioHealthySlider,
         QuickHealConfig_RatioForceselfSlider,
         QuickHealConfig_PetPrioritySlider,
-        QuickHealConfig_MaxOverhealPercentSlider,
-        QuickHealConfig_StopcastCheckWindowSlider,
         QuickHealDownrank_Slider_NH,
         QuickHealDownrank_Slider_FH,
-        QuickHealMinrank_Slider_NH,
-        QuickHealMinrank_Slider_FH,
       }
       for _, slider in pairs(sliders) do
         SkinSlider(slider)
@@ -163,7 +157,7 @@ pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
         SkinDropDown(dropdown)
       end
   
-      for i = 1, 4 do
+      for i = 1, 3 do
           local tab = _G["QuickHealConfigTab" .. i]
           if tab then
               SkinTab(tab)

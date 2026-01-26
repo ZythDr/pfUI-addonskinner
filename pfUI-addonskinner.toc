@@ -49,6 +49,7 @@ skins\QuickHeal.lua
 skins\RABuffs.lua
 skins\raidTemplate.lua
 skins\RingMenu.lua
+skins\VCB.lua
 skins\shootyepgp.lua
 skins\simpleAuras.lua
 skins\SP_Overpower.lua
