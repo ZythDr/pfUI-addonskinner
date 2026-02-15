@@ -14,6 +14,7 @@ pfUI-addonskinner-gui.lua
 
 # skins
 skins\AdvancedTradeskillWindow.lua
+skins\AdvancedTradeSkillWindow2.lua
 skins\Artisan.lua
 skins\Atlas.lua
 skins\AtlasLoot.lua
@@ -47,14 +48,17 @@ skins\Outfitter.lua
 skins\pfQuest.lua
 skins\PizzaSlices.lua
 skins\Possessions.lua
+skins\Postal.lua
 skins\QuickHeal.lua
 skins\RABuffs.lua
 skins\raidTemplate.lua
 skins\RingMenu.lua
+skins\VCB.lua
 skins\shootyepgp.lua
 skins\simpleAuras.lua
 skins\SP_Overpower.lua
 skins\SP_SwingTimer.lua
+skins\SpecialTalent.lua
 skins\SuperIgnore.lua
 skins\SuperInspect_UI.lua
 skins\SuperMacro.lua

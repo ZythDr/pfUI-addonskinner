@@ -3,15 +3,13 @@ pfUI.addonskinner:RegisterSkin("SuperInspect_UI", function()
   local penv = pfUI:GetEnvironment()
   local StripTextures, CreateBackdrop, SkinCloseButton, SkinButton, SkinArrowButton, 
     SkinCheckbox, SkinCollapseButton, SetAllPointsOffset, SetHighlight, SkinScrollbar, 
-    HookScript, hooksecurefunc, SkinDropDown, SkinSlider, HandleIcon = 
+    HookScript, hooksecurefunc, SkinDropDown, SkinSlider, HandleIcon, HookAddonOrVariable, GetStringColor = 
   penv.StripTextures, penv.CreateBackdrop, penv.SkinCloseButton, penv.SkinButton, penv.SkinArrowButton, 
   penv.SkinCheckbox, penv.SkinCollapseButton, penv.SetAllPointsOffset, penv.SetHighlight, penv.SkinScrollbar, 
-  penv.HookScript, penv.hooksecurefunc, penv.SkinDropDown, penv.SkinSlider, penv.HandleIcon
+  penv.HookScript, penv.hooksecurefunc, penv.SkinDropDown, penv.SkinSlider, penv.HandleIcon, penv.HookAddonOrVariable, penv.GetStringColor
 
-  local noop = function() end
-	
-  StripTextures(SuperInspectFrameHeader)
-  --CreateBackdrop(SuperInspectFrameHeader, nil, nil, .25)
+  local function applySkin()
+    StripTextures(SuperInspectFrameHeader)
   StripTextures(SuperInspectFrame)
   CreateBackdrop(SuperInspectFrame, nil, nil, .75)
   StripTextures(SuperInspect_InRangeFrame)
@@ -67,15 +65,113 @@ pfUI.addonskinner:RegisterSkin("SuperInspect_UI", function()
 	
   StripTextures(SuperInspect_HonorFrame)
   CreateBackdrop(SuperInspect_HonorFrame, nil, nil, .75)
+  -- ensure HonorFrame backdrop sits above the model/background art
+  if SuperInspect_HonorFrame.backdrop and SuperInspectFrame and SuperInspectFrame.backdrop then
+    SuperInspect_HonorFrame.backdrop:SetFrameStrata("DIALOG")
+    SuperInspect_HonorFrame.backdrop:SetFrameLevel(SuperInspectFrame.backdrop:GetFrameLevel() + 3)
+  end
+  HookScript(SuperInspect_HonorFrame, "OnShow", function()
+    if SuperInspect_HonorFrame.backdrop and SuperInspectFrame and SuperInspectFrame.backdrop then
+      SuperInspect_HonorFrame.backdrop:SetFrameStrata("DIALOG")
+      SuperInspect_HonorFrame.backdrop:SetFrameLevel(SuperInspectFrame.backdrop:GetFrameLevel() + 3)
+    end
+  end)
 	
-  StripTextures(SIInfoFrame)
-  CreateBackdrop(SIInfoFrame, nil, nil, .75)
-  SIInfoFrame:ClearAllPoints()
-  SIInfoFrame:SetPoint("TOPLEFT", SuperInspectFrame.backdrop, "TOPRIGHT", 1, -44)
-  SkinCloseButton(SIInfoCloseButton, SIInfoFrame.backdrop, -6, -6)
-  SkinScrollbar(SIInfoScrollFrameScrollBar)
+  if SIInfoFrame then
+    StripTextures(SIInfoFrame)
+    CreateBackdrop(SIInfoFrame, nil, nil, .75)
+    SIInfoFrame:ClearAllPoints()
+    SIInfoFrame:SetPoint("TOPLEFT", SuperInspectFrame.backdrop, "TOPRIGHT", 1, -44)
+    SkinCloseButton(SIInfoCloseButton, SIInfoFrame.backdrop, -6, -6)
+    SkinScrollbar(SIInfoScrollFrameScrollBar)
+  end
 	
   SuperInspectFramePortrait:Hide()
-	
-  pfUI.addonskinner:UnregisterSkin("SuperInspect_UI")
+
+    -- helpers for initial setup and slot updates
+    local function ApplyInspectSlotInitial(btn, name)
+      StripTextures(btn)
+      CreateBackdrop(btn)
+      SetAllPointsOffset(btn.backdrop, btn, 0)
+
+      local icon = _G[name .. "IconTexture"] or btn:GetNormalTexture()
+      if icon then
+        HandleIcon(btn.backdrop, icon)
+        SetAllPointsOffset(icon, btn.backdrop, 3)
+        icon:SetTexCoord(.08, .92, .08, .92)
+        icon:SetDrawLayer("OVERLAY")
+      end
+
+      local dur = _G[name .. "DurabilityNumber"]
+      if dur and dur.SetFont then dur:SetFont(pfUI.font_default, 11, "OUTLINE"); dur:SetTextColor(1,1,1) end
+
+      local bg = _G[name .. "BGTexture"]
+      if bg and bg.Hide then bg:Hide() end
+
+      if btn.backdrop then btn.backdrop:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color)) end
+    end
+
+    local function UpdateInspectSlot(button)
+      local bg = _G[button:GetName().."BGTexture"]
+      if bg and bg.Hide then bg:Hide() end
+
+      local icon = _G[button:GetName().."IconTexture"] or button:GetNormalTexture()
+      if icon then
+        HandleIcon(button.backdrop, icon)
+        SetAllPointsOffset(icon, button.backdrop, 3)
+        icon:SetTexCoord(.08, .92, .08, .92)
+        icon:SetDrawLayer("OVERLAY")
+      end
+
+      local unit = SuperInspect_InvFrame and SuperInspect_InvFrame.unit
+      local link = unit and GetInventoryItemLink(unit, button:GetID())
+      if link then
+        local _, _, itemstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+        local _, _, quality = GetItemInfo(itemstr or link)
+        if quality and quality > 0 and button.backdrop and button.backdrop.SetBackdropBorderColor then
+          local r, g, b = GetItemQualityColor(quality)
+          button.backdrop:SetBackdropBorderColor(r, g, b, 1)
+          return
+        else
+          if (button.hasItem or link) and pfUI and pfUI.api and pfUI.api.QueueFunction then
+            pfUI.api.QueueFunction(function()
+              if button and button:GetName() and SuperInspect_InvFrame and SuperInspect_InvFrame.unit then
+                SuperInspect_InspectPaperDollItemSlotButton_Update(button)
+              end
+            end)
+            return
+          end
+        end
+      end
+
+      if button.backdrop and button.backdrop.SetBackdropBorderColor then
+        button.backdrop:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+      end
+    end
+
+    local inspect_slots = {
+      "HeadSlot","NeckSlot","ShoulderSlot","BackSlot","ChestSlot","ShirtSlot","TabardSlot",
+      "WristSlot","HandsSlot","WaistSlot","LegsSlot","FeetSlot","Finger0Slot","Finger1Slot",
+      "Trinket0Slot","Trinket1Slot","SecondaryHandSlot","MainHandSlot","RangedSlot"
+    }
+
+    for _, s in ipairs(inspect_slots) do
+      local name = "SuperInspect_Inspect" .. s
+      local btn = _G[name]
+      if btn then
+        ApplyInspectSlotInitial(btn, name)
+      end
+    end
+
+    hooksecurefunc("SuperInspect_InspectPaperDollItemSlotButton_Update", UpdateInspectSlot)
+
+    -- unregister skin after successful application
+    pfUI.addonskinner:UnregisterSkin("SuperInspect_UI")
+  end
+
+  if SIInfoFrame then
+    applySkin()
+  else
+    HookAddonOrVariable("SuperInspect_UI", applySkin)
+  end
 end)
