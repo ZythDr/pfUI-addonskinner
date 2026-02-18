@@ -3,6 +3,7 @@ pfUI.addonskinner:RegisterSkin("Talented-turtle", function()
   local StripTextures, CreateBackdrop, SkinButton, SkinCheckbox, SkinCloseButton, HookAddonOrVariable =
     penv.StripTextures, penv.CreateBackdrop, penv.SkinButton, penv.SkinCheckbox, penv.SkinCloseButton, penv.HookAddonOrVariable
   local hooksecurefunc = penv.hooksecurefunc or _G.hooksecurefunc
+  local glow_texture = "Interface\\AddOns\\pfUI-addonskinner\\media\\img\\glow"
 
   local function skinFrame(frame, strip)
     if not frame or frame._pfasTalentedFrameSkinned then return end
@@ -120,12 +121,15 @@ pfUI.addonskinner:RegisterSkin("Talented-turtle", function()
       dim:SetPoint("TOPLEFT", btn, "TOPLEFT", 2, -2)
       dim:SetPoint("BOTTOMRIGHT", btn, "BOTTOMRIGHT", -2, 2)
       dim:Hide()
-      local hover = btn._pfasHover or btn:CreateTexture(nil, "HIGHLIGHT")
+      local hover = btn._pfasHover or btn:CreateTexture(nil, "ARTWORK")
       btn._pfasHover = hover
-      hover:SetTexture(1, 1, 1, .2)
+      hover:SetTexture(glow_texture)
+      hover:SetVertexColor(1, 1, 1, .5)
+      hover:SetBlendMode("ADD")
+      hover:SetDrawLayer("ARTWORK", 7)
       hover:ClearAllPoints()
-      hover:SetPoint("TOPLEFT", btn, "TOPLEFT", 2, -2)
-      hover:SetPoint("BOTTOMRIGHT", btn, "BOTTOMRIGHT", -2, 2)
+      hover:SetPoint("TOPLEFT", btn, "TOPLEFT", 0, 0)
+      hover:SetPoint("BOTTOMRIGHT", btn, "BOTTOMRIGHT", 0, 0)
       hover:Hide()
       if not btn._pfasTalentedHoverHooked then
         local oldEnter = btn.GetScript and btn:GetScript("OnEnter")
@@ -184,8 +188,9 @@ pfUI.addonskinner:RegisterSkin("Talented-turtle", function()
     skinFrame(_G.TalentedOptionsFrame)
 
     for _, frame in ipairs(targets.treeFrames or {}) do
-      -- Keep native branch/arrow/background textures; only add pfUI backdrops.
-      skinFrame(frame, false)
+      -- Do NOT add a per-tree backdrop: Talented tree art uses transparency and
+      -- split quadrants, and an extra backdrop causes visible seam/patch artifacts.
+      -- Keep native tree artwork/branches/arrows untouched for stable rendering.
       if frame.topleft then frame.topleft:SetAlpha(1) end
       if frame.topright then frame.topright:SetAlpha(1) end
       if frame.bottomleft then frame.bottomleft:SetAlpha(1) end
