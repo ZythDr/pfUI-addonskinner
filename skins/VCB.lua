@@ -76,7 +76,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
       end
     end
     -- If this is a regular buff button, force a black border and skip VCB color forwarding.
-    if name and string.match(name, "^VCB_BF_BUFF_BUTTON") then
+    if name and string.find(name, "^VCB_BF_BUFF_BUTTON") then
       pcall(function() if btn.backdrop and btn.backdrop.SetBackdropBorderColor then btn.backdrop:SetBackdropBorderColor(0,0,0,1) end end)
     else
       -- If VCB uses a separate border texture (e.g. VCB_BF_DEBUFF_BUTTON#Border), forward its color/alpha
@@ -124,7 +124,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
       if btn.backdrop and btn.backdrop.SetDrawLayer then btn.backdrop:SetDrawLayer("BACKGROUND", 0) end
 
       -- regular buff buttons keep a forced black border
-      if name and string.match(name, "^VCB_BF_BUFF_BUTTON") then
+      if name and string.find(name, "^VCB_BF_BUFF_BUTTON") then
         if btn.backdrop and btn.backdrop.SetBackdropBorderColor then btn.backdrop:SetBackdropBorderColor(0,0,0,1) end
       end
 

@@ -7,7 +7,7 @@ local GetStringColor = pfUI.api.GetStringColor
 
 local function GetLinkColor(link)
   if not link then return end
-  local color = string.match(link, "|c(%x%x%x%x%x%x%x%x)")
+  local _, _, color = string.find(link, "|c(%x%x%x%x%x%x%x%x)")
   if not color then return end
   local r = tonumber(string.sub(color, 3, 4), 16) / 255
   local g = tonumber(string.sub(color, 5, 6), 16) / 255
