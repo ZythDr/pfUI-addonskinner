@@ -7,6 +7,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
   local HookAddonOrVariable = penv.HookAddonOrVariable
 
   local ICON_INSET = -3
+  local CONSOLIDATED_HITRECT_EXPAND = 2
   local COUNT_LAYER_DEFAULT = 320
   local COUNT_LAYER_CONSOLIDATED = 340
 
@@ -75,7 +76,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
       end
     end
     -- If this is a regular buff button, force a black border and skip VCB color forwarding.
-    if name and string.match(name, "^VCB_BF_BUFF_BUTTON") then
+    if name and string.find(name, "^VCB_BF_BUFF_BUTTON") then
       pcall(function() if btn.backdrop and btn.backdrop.SetBackdropBorderColor then btn.backdrop:SetBackdropBorderColor(0,0,0,1) end end)
     else
       -- If VCB uses a separate border texture (e.g. VCB_BF_DEBUFF_BUTTON#Border), forward its color/alpha
@@ -123,7 +124,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
       if btn.backdrop and btn.backdrop.SetDrawLayer then btn.backdrop:SetDrawLayer("BACKGROUND", 0) end
 
       -- regular buff buttons keep a forced black border
-      if name and string.match(name, "^VCB_BF_BUFF_BUTTON") then
+      if name and string.find(name, "^VCB_BF_BUFF_BUTTON") then
         if btn.backdrop and btn.backdrop.SetBackdropBorderColor then btn.backdrop:SetBackdropBorderColor(0,0,0,1) end
       end
 
@@ -144,6 +145,29 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
           local lvl = (btn:GetFrameLevel() or 0) + 40
           applyCountLayer(count, btn, lvl, COUNT_LAYER_DEFAULT)
         end
+      end
+    end)
+  end
+
+  -- ICON_INSET is negative for visuals, which can shrink mouse hit-rect via pfUI.CreateBackdrop.
+  -- Expand consolidated hit-rects so moving cursor from icon to popup frame stays contiguous.
+  local function applyConsolidatedHitRectFix()
+    pcall(function()
+      if VCB_BF_CONSOLIDATED_ICON and VCB_BF_CONSOLIDATED_ICON.SetHitRectInsets then
+        VCB_BF_CONSOLIDATED_ICON:SetHitRectInsets(
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND
+        )
+      end
+      if VCB_BF_CONSOLIDATED_BUFFFRAME and VCB_BF_CONSOLIDATED_BUFFFRAME.SetHitRectInsets then
+        VCB_BF_CONSOLIDATED_BUFFFRAME:SetHitRectInsets(
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND,
+          -CONSOLIDATED_HITRECT_EXPAND
+        )
       end
     end)
   end
@@ -207,6 +231,8 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
           end)
         end)
       end)
+
+      applyConsolidatedHitRectFix()
     end)
   end
 
@@ -305,6 +331,7 @@ pfUI.addonskinner:RegisterSkin("VCB", function()
     VCB_BF_CONSOLIDATED_BUFFFRAME:SetScript("OnShow", function(self)
       if origOnShow then origOnShow(self) end
       pcall(function()
+        applyConsolidatedHitRectFix()
         SetAllPointsOffset(VCB_BF_CONSOLIDATED_ICONIcon, VCB_BF_CONSOLIDATED_ICON.backdrop or VCB_BF_CONSOLIDATED_ICON, ICON_INSET + 4)
         VCB_BF_CONSOLIDATED_ICONIcon:SetParent(VCB_BF_CONSOLIDATED_ICON)
         pcall(function() VCB_BF_CONSOLIDATED_ICONIcon:SetVertexColor(1,1,1,1) end)

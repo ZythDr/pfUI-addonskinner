@@ -46,7 +46,7 @@ pfUI.addonskinner:RegisterSkin("AdvancedTradeSkillWindow2", function()
 
   local function GetLinkColor(link)
     if not link then return end
-    local color = string.match(link, "|c(%x%x%x%x%x%x%x%x)")
+    local _, _, color = string.find(link, "|c(%x%x%x%x%x%x%x%x)")
     if not color then return end
     local len = string.len(color)
     local r, g, b

@@ -151,7 +151,7 @@ end
             fname = frame:GetName()
           end
           if not fname then return end
-          local parentIndex = string.match(fname, "^OutfitterQuickSlotsItem(%d+)$")
+          local _, _, parentIndex = string.find(fname, "^OutfitterQuickSlotsItem(%d+)$")
           if parentIndex then
             parentIndex = tonumber(parentIndex)
             for j=1,2 do
