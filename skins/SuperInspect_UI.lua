@@ -128,19 +128,21 @@ pfUI.addonskinner:RegisterSkin("SuperInspect_UI", function()
       if link then
         local _, _, itemstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, quality = GetItemInfo(itemstr or link)
-        if quality and quality > 0 and button.backdrop and button.backdrop.SetBackdropBorderColor then
+        if quality ~= nil and button.backdrop and button.backdrop.SetBackdropBorderColor then
           local r, g, b = GetItemQualityColor(quality)
-          button.backdrop:SetBackdropBorderColor(r, g, b, 1)
-          return
-        else
-          if (button.hasItem or link) and pfUI and pfUI.api and pfUI.api.QueueFunction then
-            pfUI.api.QueueFunction(function()
-              if button and button:GetName() and SuperInspect_InvFrame and SuperInspect_InvFrame.unit then
-                SuperInspect_InspectPaperDollItemSlotButton_Update(button)
-              end
-            end)
-            return
+          if r and g and b then
+            button.backdrop:SetBackdropBorderColor(r, g, b, 1)
+          else
+            button.backdrop:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
           end
+          return
+        elseif (button.hasItem or link) and pfUI and pfUI.api and pfUI.api.QueueFunction then
+          pfUI.api.QueueFunction(function()
+            if button and button:GetName() and SuperInspect_InvFrame and SuperInspect_InvFrame.unit then
+              SuperInspect_InspectPaperDollItemSlotButton_Update(button)
+            end
+          end)
+          return
         end
       end
 
